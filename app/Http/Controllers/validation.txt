@@ -1,0 +1,187 @@
+laravel Validation
+
+if ($product['name'] == "" || $product['catId'] == "" || $product['brandId'] == "" || $product['body'] == "" || $product['price'] == "" ) 
+        {
+     	$msg = "<span class='error'>Field Must Not be empty .</span> ";
+    			return $msg;
+		};
+		
+if ( ! filter_var($product['email'], FILTER_VALIDATE_EMAIL)) 
+        {
+     	$msg = "<span class='error'>Please Enter Valide Email .</span> ";
+    			return $msg;
+		};
+		
+ $userCount=User::where('email',$product['email'])->count();
+ if($userCount>0)
+ {
+ $msg = "<span class='error'>User Email Alrady Exist .</span> ";
+    			return $msg;
+ }
+ 
+ 
+ 
+ use Validator;
+ 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$this->validate($request,[
+            'name'=>'required',
+            'image'=>'mimes:png,jpeg, jpg',
+
+        ]);
+
+**************************************************       app password: wuxmqlmslznjbxif
+
+if($request->isMethod('post')){
+      $data = $request->all();
+   $rules = [
+       'username' => 'required,unique:users,username',
+       'password' => 'required',
+       'email'    => 'required,unique:users,email'
+      ];
+   $customMessages = [
+       'username.required'  => 'The :attribute field is required.',
+       'email.required'=> 'The :attribute field is required.',
+       'email.email'=>'valid email is required.',
+       'email.unique'    => 'emali is already used',
+       'password.required'=>'password field is required.',
+    ];
+  $this->validate($request,$rules,$customMessages);
+	  
+  }
+	  
+	  
+ in Blade File this Script should include
+===========================================
+	  
+       @if ($errors->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+      @endif
+
+***********************************************************
+  laravel8  Validation
+  ===========================================
+  $validateData = $request->validate(
+    [
+      'category_name' => 'required|unique:categories|max:255',
+      'category_name.required' => 'Please Input Category Name'
+    ]);
+  
+   @errors ('category_name')
+          <span class="text-danger"> {{ $message }} </span>
+   @enderrors
+  
+  
+  ***********************************************************************************
+   $validator = Validator::make($product, $rules, $customMessages);
+
+    if($validator ->fails()){
+  
+        return $validator ->errors();
+      }
+
+  //Multiple value//************************
+  
+  $rules = [
+             'users.*.username' => 'required,unique:users,username',
+             'users.*.password' => 'required',
+             'users.*.email'    => 'required,unique:users,email'
+       ];
+ 
+ $customMessages = [
+            'users.*.username.required' => 'The :attribute field is required.',
+            'users.*.email.required'    => 'The :attribute field is required.',
+            'users.*.email.email'       =>'valid email is required.',
+            'users.*.email.unique'      => 'emali is already used',
+            'users.*.password.required' =>'password field is required.',
+      ];
+  $validator = Validator::make($product,$rules,$customMessages);
+
+  if($validator ->fails()){return $validator ->errors();}
+  
+  
+  
+  
+  
+  
+  
+  .................welcome Mail offline...........
+  env: 
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=hr.nusrat@gmail.com
+MAIL_PASSWORD=wuxmqlmslznjbxif
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=hr.nusrat@gmail.com
+MAIL_FROM_NAME="$(APP_NAME)"
+
+register Controller: 
+$email = Auth::user()->email;
+        $name = Auth::user()->name;
+        $mobile = Auth::user()->mobile_one;
+        $messageData = ['name' => $name, 'email'=>$email,'mobile' =>$mobile];
+        Mail::send('emails.register',$messageData, function($message) use($email){
+        $message->to($email)->subject('welcome to SbTech');
+        });
+  
+  
+  
+  .................welcome Mail online...........app password: wuxmqlmslznjbxif
+  env: 
+ MAIL_DRIVER=sendmail
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=server email address
+MAIL_PASSWORD=wuxmqlmslznjbxif
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=hr.nusrat@gmail.com
+MAIL_FROM_NAME="$(APP_NAME)"
+
+register Controller: 
+$email = Auth::user()->email;
+        $name = Auth::user()->name;
+        $mobile = Auth::user()->mobile_one;
+        $messageData = ['name' => $name, 'email'=>$email,'mobile' =>$mobile];
+        Mail::send('emails.register',$messageData, function($message) use($email){
+        $message->to($email)->subject('welcome to SbTech');
+        });
+		
+		
+		
+		.................verify Mail ...........
+ 
+
+register Controller: 
+       $email = Auth::user()->email;
+        $name = Auth::user()->name;
+        $mobile = Auth::user()->mobile_one;
+        $messageData = ['name' => $name, 'email'=>$email,'code' =>base64_encode($email)];
+        Mail::send('emails.confirmation',$messageData, function($message) use($email){
+        $message->to($email)->subject('confirm your e-commerce account');
+        });
+  
+       $message= 'Please Confirm emailto activate your Account';
+	   Session:: put('success_message', $message);
+	   return redirect()->back();
+  
+  
+  
+  
+  
+**************************************************************************
+
+database name: hrnusrat_Sbtech
+pass:s1YH*+}4FDQ5
+username:hrnusrat_smartifyBD
+
+
+sbtech admin pass:6rfte6futr46dfte
+
+
