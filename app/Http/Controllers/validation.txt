@@ -21,36 +21,12 @@ if ( ! filter_var($product['email'], FILTER_VALIDATE_EMAIL))
  
  
  
- use Validator;
  
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-$this->validate($request,[
-            'name'=>'required',
-            'image'=>'mimes:png,jpeg, jpg',
 
-        ]);
 
-**************************************************       app password: wuxmqlmslznjbxif
+**************************************************    
 
-if($request->isMethod('post')){
-      $data = $request->all();
-   $rules = [
-       'username' => 'required,unique:users,username',
-       'password' => 'required',
-       'email'    => 'required,unique:users,email'
-      ];
-   $customMessages = [
-       'username.required'  => 'The :attribute field is required.',
-       'email.required'=> 'The :attribute field is required.',
-       'email.email'=>'valid email is required.',
-       'email.unique'    => 'emali is already used',
-       'password.required'=>'password field is required.',
-    ];
-  $this->validate($request,$rules,$customMessages);
-	  
-  }
-	  
-	  
+
  in Blade File this Script should include
 ===========================================
 	  
@@ -77,16 +53,62 @@ if($request->isMethod('post')){
           <span class="text-danger"> {{ $message }} </span>
    @enderrors
   
-  
   ***********************************************************************************
-   $validator = Validator::make($product, $rules, $customMessages);
 
-    if($validator ->fails()){
-  
-        return $validator ->errors();
-      }
+ if($request->isMethod('post')){
+      $data = $request->all();
+   $rules = [
+       'username' => 'required,unique:users,username',
+       'password' => 'required',
+       'email'    => 'required,unique:users,email'
+      ];
+   $customMessages = [
+       'username.required'  => 'The :attribute field is required.',
+       'email.required'=> 'The :attribute field is required.',
+       'email.email'=>'valid email is required.',
+       'email.unique'    => 'emali is already used',
+       'password.required'=>'password field is required.',
+    ];
+  $this->validate($request,$rules,$customMessages);
+	  
+  }
 
-  //Multiple value//************************
+*****************************
+    $this->validate($request,[
+            'name'=>'required',
+            'image'=>'mimes:png,jpeg, jpg',
+
+        ]);
+**************************************************************************************
+   use Illuminate\Support\Facades\Validator;
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name'=> 'required|max:191',
+            'email'=>'required|email|max:191'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json($validator-errors()->toJson(),400);
+        }
+        else
+        {
+            $student = new Student;
+            $student->name = $request->input('name');
+            $student->email = $request->input('email');
+            $student->save();
+            return response()->json([
+                'status' => 200,
+                'message'=>'Student Added Successfully.'
+            ]);
+        }
+
+    }
+  **********************************************************************************
+
+  //Multiple value//
   
   $rules = [
              'users.*.username' => 'required,unique:users,username',
